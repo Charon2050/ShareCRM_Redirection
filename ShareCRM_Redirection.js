@@ -8,7 +8,7 @@
 // @match        https://www.fxiaoke.com/XV/UI/Home
 // @match        https://www.fxiaoke.com/XV/UI/manage
 // @grant        none
-// @license      NoLicense
+// @license      Unlicense: dedicates works to the public domain
 // ==/UserScript==
  
 (function () {
