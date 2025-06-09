@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         CRM前后端跳转
+// @name         纷享销客CRM前后端跳转
 // @namespace    https://www.zhihu.com/people/charon2050
 // @icon         https://www.fxiaoke.com/favicon.ico
 // @description  在纷享销客 CRM 列表页、后台对象管理、后台流程管理 3 个页面之间快速跳转
@@ -8,17 +8,18 @@
 // @match        https://www.fxiaoke.com/XV/UI/Home
 // @match        https://www.fxiaoke.com/XV/UI/manage
 // @grant        none
+// @license      NoLicense
 // ==/UserScript==
-
+ 
 (function () {
   'use strict';
-
+ 
   const hash = location.hash;
-
+ 
   // 创建通用按钮1
   function createFloatingButton1({ id, text, onClick }) {
     if (document.getElementById(id)) return;
-
+ 
     const button = document.createElement('button');
     button.id = id;
     button.textContent = text;
@@ -35,14 +36,14 @@
       cursor: 'pointer',
     });
     button.onclick = onClick;
-
+ 
     document.body.appendChild(button);
   }
-
+ 
   // 创建通用按钮2
   function createFloatingButton2({ id, text, onClick }) {
     if (document.getElementById(id)) return;
-
+ 
     const button = document.createElement('button');
     button.id = id;
     button.textContent = text;
@@ -59,10 +60,10 @@
       cursor: 'pointer',
     });
     button.onclick = onClick;
-
+ 
     document.body.appendChild(button);
   }
-
+ 
   // 📜 列表页 → 管理页
   function setupFront2Manage() {
     createFloatingButton1({
@@ -74,28 +75,28 @@
           alert('ERROR: 未检测到有效的CRM列表页面；请点进特定对象的列表页后再使用此按钮！');
           return;
         }
-
+ 
         const api_name = hash.split('#crm/list/=/')[1].split('?')[0];
         const h2 = document.querySelector('h2');
         if (!h2) {
           alert('ERROR: 未找到标题（h2）元素；请点进特定对象的列表页后再使用此按钮！');
           return;
         }
-
+ 
         const name = h2.textContent.trim();
         sessionStorage.setItem('name', name);
         sessionStorage.setItem('api_name', api_name);
-
+ 
         const isCustom = api_name.endsWith('__c');
         const targetUrl = isCustom
           ? 'https://www.fxiaoke.com/XV/UI/manage#crmmanage/=/module-myobject'
           : 'https://www.fxiaoke.com/XV/UI/manage#crmmanage/=/module-sysobject';
-
+ 
         window.open(targetUrl, '_blank');
       }
     });
   }
-
+ 
   // 📜 列表页 → 审批流
   function setupFront2Approval() {
     createFloatingButton2({
@@ -107,23 +108,23 @@
           alert('ERROR: 未检测到有效的CRM列表页面；请点进特定对象的列表页后再使用此按钮！');
           return;
         }
-
+ 
         const api_name = hash.split('#crm/list/=/')[1].split('?')[0];
         const h2 = document.querySelector('h2');
         if (!h2) {
           alert('ERROR: 未找到标题（h2）元素；请点进特定对象的列表页后再使用此按钮！');
           return;
         }
-
+ 
         const name = h2.textContent.trim();
         sessionStorage.setItem('name', name);
         sessionStorage.setItem('api_name', api_name);
-
+ 
         window.open('https://www.fxiaoke.com/XV/UI/manage#crmmanage/=/module-approval', '_blank');
       }
     });
   }
-
+ 
   // 👩🏻‍💻 管理页 → 前端页
   function setupManage2Front() {
     createFloatingButton1({
@@ -135,14 +136,14 @@
           alert('ERROR: 未找到标题（h1）元素；请点进特定对象的管理页面后再使用此按钮！');
           return;
         }
-
+ 
         const name = h1.textContent.trim();
         sessionStorage.setItem('name', name);
         window.open('https://www.fxiaoke.com/XV/UI/Home#crm/index', '_blank');
       }
     });
   }
-
+ 
   // 👩🏻‍💻 管理页 → 审批流
   function setupManage2Approval() {
     createFloatingButton2({
@@ -154,14 +155,14 @@
           alert('ERROR: 未找到标题（h1）元素；请点进特定对象的管理页面后再使用此按钮！');
           return;
         }
-
+ 
         const name = h1.textContent.trim();
         sessionStorage.setItem('name', name);
         window.open('https://www.fxiaoke.com/XV/UI/manage#crmmanage/=/module-approval', '_blank');
       }
     });
   }
-
+ 
   // ☑ 审批流 → 前端页
   function setupApproval2Front() {
     createFloatingButton1({
@@ -179,7 +180,7 @@
       }
     });
   }
-
+ 
   // ☑ 审批流 → 管理页
   function setupApproval2Manage() {
     createFloatingButton2({
@@ -192,24 +193,24 @@
           return;
         }
         const name = input.title.trim();
-
+ 
         fetchApiName("客户").then(api_name => {
           if (api_name) {
             sessionStorage.setItem('name', name);
             sessionStorage.setItem('api_name', api_name);
-
+ 
             const isCustom = api_name.endsWith('__c');
             const targetUrl = isCustom
               ? 'https://www.fxiaoke.com/XV/UI/manage#crmmanage/=/module-myobject'
               : 'https://www.fxiaoke.com/XV/UI/manage#crmmanage/=/module-sysobject';
-
+ 
             window.open(targetUrl, '_blank');
           }
         });
       }
     });
   }
-
+ 
   // 👆 模拟点击
   function autoClickModuleByName(selector, name) {
     const tryClick = setInterval(() => {
@@ -228,8 +229,8 @@
       }
     }, 500);
   }
-
-
+ 
+ 
   function fetchApiName(name) {
     return fetch("https://www.fxiaoke.com/FHH/EM1HNCRM/API/v1/object/search/service/find_search_object_list", {
       method: "POST",
@@ -249,10 +250,10 @@
         return null;
       });
   }
-
+ 
   // 入口处理
   const url = location.href;
-
+ 
   if (url.includes('/XV/UI/Home')) {
     // CRM前端页面逻辑
     setupFront2Manage(); // 添加跳转模块管理按钮
